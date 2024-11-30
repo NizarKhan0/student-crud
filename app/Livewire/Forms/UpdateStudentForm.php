@@ -32,8 +32,11 @@ class UpdateStudentForm extends Form
     }
     public function updateStudent($class_id, $email)
     {
-        $this->validate();
+        $this->validate([
+            'section_id' => 'required|exists:sections,id',
+        ]);
 
+        // dd($this->student);
         $this->student->update([
             'name' => $this->name,
             'email' => $email,

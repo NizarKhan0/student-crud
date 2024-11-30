@@ -1,11 +1,11 @@
 <div class="mx-auto mt-8 mb-8 w-fit">
-    <h2 class="text-center font-extrabold text-3xl p-4 my-2">
+    <h2 class="p-4 my-2 text-3xl font-extrabold text-center">
         Edit Student Information
     </h2>
     <form wire:submit="updateStudent">
-        <div class="flex flex-wrap -mx-3 mb-6">
-            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        <div class="flex flex-wrap mb-6 -mx-3">
+            <div class="w-full px-3 mb-6 md:w-1/2 md:mb-0">
+                <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="grid-first-name">
                     Name
                 </label>
                 <input id="name" type="text" placeholder="Enter student name" wire:model="form.name"
@@ -15,11 +15,11 @@
                         @enderror
                         focus:outline-none focus:bg-white">
                 @error('form.name')
-                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    <p class="text-xs italic text-red-500">{{ $message }}</p>
                 @enderror
             </div>
-            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+            <div class="w-full px-3 mb-6 md:w-1/2 md:mb-0">
+                <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="grid-first-name">
                     Email
                 </label>
                 <input id="name" type="email" placeholder="Enter student email" wire:model="email"
@@ -29,13 +29,13 @@
                         @enderror
                         focus:outline-none focus:bg-white">
                 @error('email')
-                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    <p class="text-xs italic text-red-500">{{ $message }}</p>
                 @enderror
             </div>
         </div>
-        <div class="flex flex-wrap -mx-3 mb-6">
-            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+        <div class="flex flex-wrap mb-6 -mx-3">
+            <div class="w-full px-3 mb-6 md:w-1/2 md:mb-0">
+                <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase">
                     Class
                 </label>
                 <select
@@ -47,11 +47,11 @@
                     @endforeach
                 </select>
                 @error('class_id')
-                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    <p class="text-xs italic text-red-500">{{ $message }}</p>
                 @enderror
             </div>
-            <div class="w-full md:w-1/2 px-3">
-                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            <div class="w-full px-3 md:w-1/2">
+                <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase">
                     Section
                 </label>
                 <select
@@ -63,13 +63,13 @@
                     @endforeach
                 </select>
                 @error('form.section_id')
-                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    <p class="text-xs italic text-red-500">{{ $message }}</p>
                 @enderror
             </div>
         </div>
         <div class="flex justify-between">
             <button
-                class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
+                class="flex-shrink-0 px-2 py-1 text-sm text-white bg-teal-500 border-4 border-teal-500 rounded hover:bg-teal-700 hover:border-teal-700"
                 type="submit">
                 Update
             </button>

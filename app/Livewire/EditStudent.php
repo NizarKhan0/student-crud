@@ -33,8 +33,8 @@ class EditStudent extends Component
     public function updateStudent()
     {
         $this->validate([
+            'class_id' => 'required|exists:classes,id',
             'email' => 'required|email|unique:students,email,' . $this->student->id,
-            'class_id' => 'required',
         ]);
 
         // dd('add student');
