@@ -2,11 +2,12 @@
 
 namespace App\Livewire;
 
-use App\Livewire\Forms\UpdateStudentForm;
-use Livewire\Component;
-use Livewire\Attributes\Validate;
 use App\Models\Classes;
 use App\Models\Student;
+use Livewire\Component;
+use Livewire\Attributes\Validate;
+use Filament\Notifications\Notification;
+use App\Livewire\Forms\UpdateStudentForm;
 
 class EditStudent extends Component
 {
@@ -40,6 +41,11 @@ class EditStudent extends Component
         // dd('add student');
         $this->form->updateStudent($this->class_id, $this->email);
 
+        Notification::make()
+        ->title('Student Update Successfully')
+        ->info()
+        ->color('info')
+        ->send();
         // dd($student);
         return $this->redirect(route('students.index'));
     }
