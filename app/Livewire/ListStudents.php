@@ -9,6 +9,7 @@ use Livewire\WithPagination;
 use App\Exports\StudentsExport;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection\pluck;
 
 class ListStudents extends Component
 {
@@ -18,7 +19,7 @@ class ListStudents extends Component
     #[Url]
     public string $sortColumn = 'created_at', $sortDirection = 'desc';
 
-    public array $selectedStudentIds = [];
+    public array $selectedStudentIds = [], $studentIdsOnPage = [];
 
     public function render()
     {
@@ -28,8 +29,15 @@ class ListStudents extends Component
 
         $query = $this->applySort($query);
 
+        $students = $query->paginate(10);
+
+        $this->studentIdsOnPage = $students->map(fn ($student) =>
+          (string) $student->id)->toArray();
+
+        // dd($this->studentIdsOnPage);
+
         return view('livewire.list-students', [
-            'students' => $query->paginate(10),
+            'students' => $students ,
         ]);
     }
 
@@ -57,17 +65,15 @@ class ListStudents extends Component
             });
     }
 
+    //ini untuk single delete
     public function deleteStudent(Student $student)
     {
         //Auth check
         $student->delete();
-
-        Notification::make()
-        ->title('Student Deleted Successfully')
-        ->success()
-        ->send();
     }
 
+
+    // ini utnutk bulk delete
     public function deleteStudents()
     {
         $students = Student::find($this->selectedStudentIds);
@@ -76,10 +82,19 @@ class ListStudents extends Component
             $this->deleteStudent($student);
         }
 
-        Notification::make()
-        ->title('Selected Records Deleted Successfully')
-        ->success()
-        ->send();
+        // Send notification only if any students were deleted
+        if($this->selectedStudentIds && count($this->selectedStudentIds) === 1)
+        {
+            Notification::make()
+                ->title('Student Deleted Successfully')
+                ->success()
+                ->send();
+        } else {
+            Notification::make()
+                ->title('Selected Records Deleted Successfully')
+                ->success()
+                ->send();
+        }
     }
 
     public function exportExcel()

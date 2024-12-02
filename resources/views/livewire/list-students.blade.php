@@ -40,7 +40,9 @@
     <table class="min-w-full text-center bg-white border-collapse rounded-lg shadow-md table-auto">
         <thead>
             <tr class="text-gray-700 bg-gray-200">
-                <th class="px-4 py-2 border"></th>
+                <th class="px-4 py-2 border">
+                   <x-check-all />
+                </th>
                 <th class="px-4 py-2 border">
                     <button wire:click="sortBy('id')">ID
                         <span class="ml-2 sort-icon">
@@ -82,7 +84,7 @@
         </thead>
         <tbody>
             @foreach ($students as $student)
-            <tr class="odd:bg-gray-50">
+            <tr wire:key="{{ $student->id }}" class="odd:bg-gray-50">
                 <td class="px-4 py-2 border">
                     <input wire:model="selectedStudentIds" type="checkbox" value="{{ $student->id }}">
                 </td>
