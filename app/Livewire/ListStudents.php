@@ -3,67 +3,20 @@
 namespace App\Livewire;
 
 use App\Models\Student;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
-use Livewire\Attributes\Url;
+use App\Traits\Searchable;
+use App\Traits\Sortable;
 use Livewire\WithPagination;
 use App\Exports\StudentsExport;
 use Filament\Notifications\Notification;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection\pluck;
 
+#[Lazy]
 class ListStudents extends Component
 {
-    use WithPagination;
+    use WithPagination, Searchable, Sortable;
 
-    public string $search = '';
-    #[Url]
-    public string $sortColumn = 'created_at', $sortDirection = 'desc';
-
-    public array $selectedStudentIds = [], $studentIdsOnPage = [];
-
-    public function render()
-    {
-        $query = Student::query();
-
-        $query = $this->applySearch($query);
-
-        $query = $this->applySort($query);
-
-        $students = $query->paginate(10);
-
-        $this->studentIdsOnPage = $students->map(fn ($student) =>
-          (string) $student->id)->toArray();
-
-        // dd($this->studentIdsOnPage);
-
-        return view('livewire.list-students', [
-            'students' => $students ,
-        ]);
-    }
-
-    protected function applySort(Builder $query): Builder
-    {
-        return $query->orderBy($this->sortColumn, $this->sortDirection);
-    }
-
-    public function sortBy(String $column)
-    {
-        if ($this->sortColumn === $column) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortDirection = 'asc';
-            $this->sortColumn = $column;
-        }
-    }
-
-    public function applySearch(Builder $query): Builder
-    {
-        return $query->where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('email', 'like', '%' . $this->search . '%')
-            ->orWhereHas('class', function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%');
-            });
-    }
+    public array $selectedStudentIds = [], $studentIdsOnPage = [], $allStudentIds = [];
 
     //ini untuk single delete
     public function deleteStudent(Student $student)
@@ -71,7 +24,6 @@ class ListStudents extends Component
         //Auth check
         $student->delete();
     }
-
 
     // ini utnutk bulk delete
     public function deleteStudents()
@@ -83,8 +35,7 @@ class ListStudents extends Component
         }
 
         // Send notification only if any students were deleted
-        if($this->selectedStudentIds && count($this->selectedStudentIds) === 1)
-        {
+        if ($this->selectedStudentIds && count($this->selectedStudentIds) === 1) {
             Notification::make()
                 ->title('Student Deleted Successfully')
                 ->success()
@@ -108,5 +59,35 @@ class ListStudents extends Component
             'sortColumn',
             'sortDirection',
         ];
+    }
+
+    public function render()
+    {
+        sleep(2);
+        $query = Student::query();
+
+        $query = $this->applySearch($query);
+
+        $query = $this->applySort($query);
+
+        // ini untuk buat select all
+        $this->allStudentIds = $query->pluck('id')->map(fn($id) => (string) $id)->toArray();
+        // dd($this->allStudentIds);
+
+        $students = $query->paginate(5);
+
+        $this->studentIdsOnPage = $students->map(fn($student) =>
+        (string) $student->id)->toArray();
+
+        // dd($this->studentIdsOnPage);
+
+        return view('livewire.list-students', [
+            'students' => $students,
+        ]);
+    }
+
+    public function placeholder()
+    {
+        return view('components.table-placeholder');
     }
 }
